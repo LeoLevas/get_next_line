@@ -6,7 +6,7 @@
 /*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:20:32 by levasse           #+#    #+#             */
-/*   Updated: 2022/11/22 16:25:48 by leo              ###   ########.fr       */
+/*   Updated: 2022/11/22 20:09:37 by leo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ char *get_next_line(int fd)
     int     len_line;
     int     count;
 
-    if (!fd || fd < 0)
+    if (!fd || fd <= 0)
         return (NULL);
     count = read(fd, buff, 1);
-    if (count == 0)
+    if (count <= 0)
         return (NULL);
     line = malloc(2 * sizeof(char));
     if (!line)
@@ -31,7 +31,6 @@ char *get_next_line(int fd)
     line[0] = buff[0];
     line [1] = '\0';
     len_line = 1;
-    /* len_line == 2 to make place for the first char and the null char */
     while (count != 0 && buff[0] != '\n' && buff[0] != '\0')
     {
         temp = malloc((len_line + 1)* sizeof(char));
@@ -81,6 +80,7 @@ int main()
     char *res;
     
     fd = open("./testFiles/one_line", O_RDWR);
+    close(fd);
     res = get_next_line(fd);
     printf("%s", res);
-}    */
+} */
