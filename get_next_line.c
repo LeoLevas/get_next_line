@@ -6,7 +6,7 @@
 /*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:20:32 by levasse           #+#    #+#             */
-/*   Updated: 2022/11/22 20:09:37 by leo              ###   ########.fr       */
+/*   Updated: 2022/11/22 21:04:16 by leo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,8 +51,10 @@ char *get_next_line(int fd)
         free(temp);
         count = read(fd, buff, 1);
         line[len_line] = buff[0];
-        if (buff[0] != '\n' && count != 0)
+        if (buff[0] != '\n')
             line[len_line + 1] = '\0';
+        if (count == 0)
+            line[len_line] = '\0';
         len_line++;
     }
     line[len_line] = '\0';
@@ -79,8 +81,7 @@ int main()
     int fd;
     char *res;
     
-    fd = open("./testFiles/one_line", O_RDWR);
-    close(fd);
+    fd = open("./gnlTester/files/41_no_nl", O_RDWR);
     res = get_next_line(fd);
     printf("%s", res);
 } */
