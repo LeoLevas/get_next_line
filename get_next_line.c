@@ -3,14 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:20:32 by levasse           #+#    #+#             */
-/*   Updated: 2022/11/24 16:11:04 by leo              ###   ########.fr       */
+/*   Updated: 2022/11/24 18:03:24 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+char	*get_next_line(int fd)
+{
+	char	*line;
+	char	buff[1];
+	int		count;
+
+	if (fd < 0)
+		return (NULL);
+	count = read(fd, buff, 1);
+	if (count <= 0)
+		return (NULL);
+	line = malloc(2 * sizeof(char));
+	if (!line)
+		return (NULL);
+	line[0] = buff[0];
+	line [1] = '\0';
+	line = get_next_line_part2(fd, line, buff);
+	return (line);
+}
 
 static char	*fill_string(char *s1, char *s2, int len_line)
 {
@@ -53,26 +73,6 @@ static char	*get_next_line_part2(int fd, char *line, char buff[1])
 	return (line);
 }
 
-char	*get_next_line(int fd)
-{
-	char	*line;
-	char	buff[1];
-	int		count;
-
-	if (!fd || fd <= 0)
-		return (NULL);
-	count = read(fd, buff, 1);
-	if (count <= 0)
-		return (NULL);
-	line = malloc(2 * sizeof(char));
-	if (!line)
-		return (NULL);
-	line[0] = buff[0];
-	line [1] = '\0';
-	line = get_next_line_part2(fd, line, buff);
-	return (line);
-}
-
 void	fill_char(char *dst, char *src)
 {
 	int	i;
@@ -85,3 +85,16 @@ void	fill_char(char *dst, char *src)
 	}
 	dst[i] = src[i];
 }
+
+/* #include <fcntl.h>
+#include <stdio.h>
+int main()
+{
+    int fd;
+    char *res;
+    
+    fd = open("./gnlTester/files/alternate_line_nl_with_nl", O_RDWR);
+    res = get_next_line(0);
+    close(fd);
+    printf("%s", res);
+} */

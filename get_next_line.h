@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:21:50 by levasse           #+#    #+#             */
-/*   Updated: 2022/11/24 16:08:16 by leo              ###   ########.fr       */
+/*   Updated: 2022/11/24 17:32:10 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 
-char			*get_next_line(int fd);
+char		*get_next_line(int fd);
 void		fill_char(char *dst, char *src);
+static char	*get_next_line_part2(int fd, char *line, char buff[1]);
+static char	*fill_string(char *s1, char *s2, int len_line);
 
 #endif
