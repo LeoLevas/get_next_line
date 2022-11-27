@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:20:32 by levasse           #+#    #+#             */
-/*   Updated: 2022/11/26 17:05:53 by leo              ###   ########.fr       */
+/*   Updated: 2022/11/27 10:01:06 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,28 @@ char	*get_next_line(int fd)
 			return (NULL);
 		count = read(fd, buff, BUFFER_SIZE);
 	}
+	stop_at_nl(line, buff);
 	return (line);
+}
+
+void	stop_at_nl(char *line, char buff[BUFFER_SIZE])
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (line[i] != '\n' && line[i])
+		i++;
+	i++;
+	while (line[i])
+	{
+		buff[j] = line[i];
+		line[i] = '\0';
+		i++;
+		j++;
+	}
+	buff[j] = '\0';
 }
 
 char	*fill_string(char *s1, char *s2, int len_line)
@@ -47,34 +68,6 @@ char	*fill_string(char *s1, char *s2, int len_line)
 	return (s1);
 }
 
-/* static char	*get_next_line_part2(int fd, char *line, char *buff)
-{
-	char	*temp;
-	int		len_line;
-	int		count;
-
-	count = 1;
-	len_line = 1;
-	while (count != 0 && buff[0] != '\n' && buff[0] != '\0')
-	{
-		temp = fill_string(temp, line, len_line + 1);
-		if (!temp)
-			return (NULL);
-		line = fill_string(line, temp, len_line + 2);
-		if (!line)
-			return (NULL);
-		count = read(fd, buff, BUFFER_SIZE);
-		line[len_line] = buff[0];
-		if (buff[0] != '\n')
-			line[len_line + 1] = '\0';
-		if (count == 0)
-			line[len_line] = '\0';
-		len_line++;
-	}
-	line[len_line] = '\0';
-	return (line);
-}
- */
 void	fill_char(char *dst, char *src)
 {
 	int	i;
@@ -87,7 +80,7 @@ void	fill_char(char *dst, char *src)
 	}
 	dst[i] = src[i];
 }
-/* 
+
 #include <fcntl.h>
 #include <stdio.h>
 int main()
@@ -95,7 +88,9 @@ int main()
     int fd;
     char *res;
     
-    fd = open("./gnlTester/files/41_no_nl", O_RDWR);
+    fd = open("./gnlTester/files/41_with_nl", O_RDWR);
+    res = get_next_line(fd);
+    printf("%s", res);
     res = get_next_line(fd);
     printf("%s", res);
 }
@@ -151,4 +146,4 @@ char	*ft_strjoin(char *s1, char *s2)
 	joined[j] = '\0';
 	free(s1);
 	return (joined);
-} */
+}
