@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:21:50 by levasse           #+#    #+#             */
-/*   Updated: 2022/11/24 17:32:10 by llevasse         ###   ########.fr       */
+/*   Updated: 2022/11/26 13:52:23 by leo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,14 @@
 
 char		*get_next_line(int fd);
 void		fill_char(char *dst, char *src);
-static char	*get_next_line_part2(int fd, char *line, char buff[1]);
-static char	*fill_string(char *s1, char *s2, int len_line);
+char		*ft_strjoin(char *s1, char *s2);
+size_t		ft_strlen(const char *str);
+char		*fill_string(char *s1, char *s2, int len_line);
+int			is_nl(const char *str);
+
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
 
 #endif
