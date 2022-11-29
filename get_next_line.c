@@ -6,7 +6,7 @@
 /*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:20:32 by levasse           #+#    #+#             */
-/*   Updated: 2022/11/28 19:52:31 by leo              ###   ########.fr       */
+/*   Updated: 2022/11/28 20:07:18 by leo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*get_next_line(int fd)
 	static char	buff[BUFFER_SIZE];
 	int			count;
 
-	count = 0;
+	count = 1;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	if (ft_strcmp(buff, "") == 0)
@@ -120,7 +120,7 @@ void	fill_char(char *dst, char *src)
 	if (src[i] == '\n')
 		dst[i + 1] = '\0';
 }
-
+/* 
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
@@ -218,4 +218,4 @@ char	*ft_strjoin(char *s1, char *s2)
 	joined[j] = '\0';
 	free(s1);
 	return (joined);
-}
+} */
