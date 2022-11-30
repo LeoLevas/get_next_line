@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:20:32 by levasse           #+#    #+#             */
-/*   Updated: 2022/11/29 11:04:56 by llevasse         ###   ########.fr       */
+/*   Updated: 2022/11/30 20:42:17 by leo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@ char	*get_next_line(int fd)
 		count = read(fd, buff, BUFFER_SIZE);
 		if (count <= 0)
 			return (NULL);
+		stach = malloc((count + 1) * sizeof(char));
+		if (!stach)
+			return (NULL);
+		fill_char(stach, buff, 0);
 	}
-	stach = malloc((BUFFER_SIZE + 1) * sizeof(char));
-	if (!stach)
-		return (NULL);
-	fill_char(stach, buff);
-	if (!is_nl(stach) && read(fd, 0, 0) > 0)
+	if (!is_nl(stach))
 	{
 		count = read(fd, buff, BUFFER_SIZE);
-		while (!is_nl(stach) && read(fd, 0, 0) > 0)
+		while (!is_nl(stach) && count > 0)
 		{
 			stach = ft_strjoin(stach, buff);
 			if (!stach)
@@ -42,19 +42,21 @@ char	*get_next_line(int fd)
 			if (!is_nl(stach))
 				count = read(fd, buff, BUFFER_SIZE);
 		}
+		if (count <= 0)
+			stach = ft_strjoin(stach, "\0");
 	}
 	line = malloc((ft_strlen(stach) + 1) * sizeof(char));
 	if (!line)
 		return (NULL);
-	fill_char(line, stach);
-	stop_at_nl(line, stach);
-	if (read(fd, 0, 0) <= 0)
-		free(stach);
+	fill_char(line, stach, 1);
+	if (ft_strcmp(line, stach))
+		get_left_over(line, stach);
 	return (line);
 }
 
-void	stop_at_nl(char *line, char *buff)
+void	get_left_over(char *line, char *stach)
 {
+	/* leave the difference of line and stach in stach */
 	int	i;
 	int	j;
 
@@ -62,28 +64,16 @@ void	stop_at_nl(char *line, char *buff)
 	j = 0;
 	while (line[i] != '\n' && line[i])
 		i++;
+	if (!line[i] && !stach[i])
+		return ;
 	i++;
-	if (line[i - 1] == '\n' && line[i] == '\0')
+	while (stach[i] != '\0')
 	{
-		while (buff[i] != '\0')
-		{
-			buff[j] = buff[i];
-			i++;
-			j++;
-		}
-		buff[j] = '\0';
+		stach[j] = stach[i];
+		i++;
+		j++;
 	}
-	else
-	{	
-		while (buff[j] != '\0')
-		{
-			buff[j] = line[i];
-			line[i] = '\0';
-			j++;
-			i++;
-		}
-		buff[j] = '\0';
-	}
+	stach[j] = '\0';
 }
 
 int	ft_strcmp(const char *s1, const char *s2)
@@ -98,20 +88,31 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return (s1[i] - s2[i]);
 }
 
-
-void	fill_char(char *dst, char *src)
+void	fill_char(char *dst, char *src, int till_nl)
 {
 	int	i;
 
 	i = 0;
-	while (src[i] != '\0' && src[i] != '\n')
+	if (!till_nl)
 	{
-		dst[i] = src[i];
-		i++;
+		while (src[i] > 0)
+		{
+			dst[i] = src[i];
+			i++;
+		}
+		dst[i] = '\0';
 	}
-	dst[i] = src[i];
-	if (src[i] == '\n')
-		dst[i + 1] = '\0';
+	else
+	{
+		while (src[i] > 0 && src[i] != '\n')
+		{
+			dst[i] = src[i];
+			i++;
+		}
+		dst[i] = src[i];
+		if (dst[i] != '\0')
+			dst[i + 1] = '\0';
+	}
 }
 
 #include <fcntl.h>
@@ -123,19 +124,21 @@ int main()
 	char *res;
 	const char *expectedres;
 
-	fd = open("./gnlTester/files/41_no_nl", O_RDWR);
+	printf("\n---41_with_nl---\n");
+	fd = open("./gnlTester/files/41_with_nl", O_RDWR);
 	res = get_next_line(fd);
-	expectedres = "01234567890123456789012345678901234567890";
+	expectedres = "0123456789012345678901234567890123456789\n";
 	if (!strcmp(res, expectedres))
 		printf("right : %s---------\n", res);
 	else
 		printf("%s \ninstead of \n%s\n---------\n", res, expectedres);
-	
 	res = get_next_line(fd);
-	if (res == NULL)
-		printf("right : %s\n---------\n", res);
+	expectedres = "0";
+	if (!strcmp(res, expectedres))
+		printf("right : %s---------\n", res);
 	else
-		printf("%s \ninstead of \nNULL\n---------\n", res);
+		printf("%s \ninstead of \n%s\n---------\n", res, expectedres);
+	close(fd);
 }
 
 int	is_nl(const char *str)
@@ -190,3 +193,4 @@ char	*ft_strjoin(char *s1, char *s2)
 	free(s1);
 	return (joined);
 }
+
