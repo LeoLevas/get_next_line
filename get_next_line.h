@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:21:50 by levasse           #+#    #+#             */
-/*   Updated: 2022/11/30 19:39:36 by leo              ###   ########.fr       */
+/*   Updated: 2022/12/01 10:33:48 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ int			is_nl(const char *str);
 void		get_left_over(char *line, char *stach);
 void		clear_buff(char buff[BUFFER_SIZE]);
 int			ft_strcmp(const char *s1, const char *s2);
+void		ft_setzero(char *stach);
+void		empty_buff(char buff[BUFFER_SIZE]);
 
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:20:32 by levasse           #+#    #+#             */
-/*   Updated: 2022/12/01 08:56:04 by llevasse         ###   ########.fr       */
+/*   Updated: 2022/12/01 11:27:42 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ char	*get_next_line(int fd)
 			return (NULL);
 		stach[count] = '\0';
 		fill_char(stach, buff, 0);
+		empty_buff(buff);
 	}
 	if (!is_nl(stach))
 	{
@@ -39,6 +40,7 @@ char	*get_next_line(int fd)
 		while (!is_nl(stach) && count > 0)
 		{
 			stach = ft_strjoin(stach, buff);
+			empty_buff(buff);
 			if (!stach)
 				return (NULL);
 			if (!is_nl(stach))
@@ -59,6 +61,18 @@ char	*get_next_line(int fd)
 		stach = NULL;
 	}
 	return (line);
+}
+
+void	empty_buff(char buff[BUFFER_SIZE])
+{
+	int	i;
+
+	i = 0;
+	while (i <= BUFFER_SIZE && buff[i] != 0)
+	{
+		buff[i] = 0;
+		i++;
+	}
 }
 
 void	get_left_over(char *line, char *stach)
@@ -127,31 +141,44 @@ void	fill_char(char *dst, char *src, int till_nl)
 			dst[i + 1] = '\0';
 	}
 }
-/* 
+
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
+void gnl(int fd, char *expectedres);
+
 int main()
 {
 	int fd;
-	char *res;
-	const char *expectedres;
 
-	printf("\n---nl---\n");
-	fd = open("./gnlTester/files/41_no_nl", O_RDWR);
-	res = get_next_line(fd);
-	expectedres = "01234567890123456789012345678901234567890";
-	if (!ft_strcmp(res, expectedres))
-		printf("right : %s---------\n", res);
-	else
-		printf("%s \ninstead of \n%s\n---------\n", res, expectedres);
-	res = get_next_line(fd);
-	expectedres = "0";
-	if (res == NULL)
-		printf("right : %s---------\n", res);
-	else
-		printf("%s \ninstead of \nNULL\n---------\n", res);
-	close(fd);
+	printf("\n---multiple_line_no_nl---\n");
+	fd = open("./gnlTester/files/multiple_line_no_nl", O_RDWR);
+/* 1 */ gnl(fd, "01234567890123456789012345678901234567890\n");
+/* 2 */ gnl(fd, "987654321098765432109876543210987654321098\n");
+/* 3 */ gnl(fd, "0123456789012345678901234567890123456789012\n");
+/* 4 */ gnl(fd, "987654321098765432109876543210987654321098\n");
+/* 5 */ gnl(fd, "01234567890123456789012345678901234567890");
+/* 6 */ gnl(fd, NULL);
+}
+
+void gnl(int fd, char *expectedres)
+{
+	char *res = get_next_line(fd);
+
+	if (expectedres != NULL)
+	{
+		if (!ft_strcmp(res, expectedres))
+			printf("right : %s---------\n", res);
+		else
+			printf("%s \ninstead of \n%s\n---------\n", res, expectedres);
+	}
+	else 
+	{
+		if (res == NULL)
+			printf("right : (null)---------\n");
+		else
+			printf("%s \ninstead of \n(null)\n---------\n", res);
+	}
 }
 
 int	is_nl(const char *str)
@@ -207,4 +234,3 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (joined);
 }
 
- */
