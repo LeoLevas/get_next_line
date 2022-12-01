@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:20:32 by levasse           #+#    #+#             */
-/*   Updated: 2022/11/30 20:42:17 by leo              ###   ########.fr       */
+/*   Updated: 2022/12/01 08:56:04 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*get_next_line(int fd)
 {
 	char		*line;
 	static char	*stach;
-	char		buff[BUFFER_SIZE];
+	char		buff[BUFFER_SIZE + 1];
 	int			count;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
@@ -24,11 +24,13 @@ char	*get_next_line(int fd)
 	if (ft_strcmp(stach, "") == 0)
 	{
 		count = read(fd, buff, BUFFER_SIZE);
+		buff[count] = '\0';
 		if (count <= 0)
 			return (NULL);
 		stach = malloc((count + 1) * sizeof(char));
 		if (!stach)
 			return (NULL);
+		stach[count] = '\0';
 		fill_char(stach, buff, 0);
 	}
 	if (!is_nl(stach))
@@ -51,12 +53,16 @@ char	*get_next_line(int fd)
 	fill_char(line, stach, 1);
 	if (ft_strcmp(line, stach))
 		get_left_over(line, stach);
+	else 
+	{
+		free(stach);
+		stach = NULL;
+	}
 	return (line);
 }
 
 void	get_left_over(char *line, char *stach)
 {
-	/* leave the difference of line and stach in stach */
 	int	i;
 	int	j;
 
@@ -65,7 +71,14 @@ void	get_left_over(char *line, char *stach)
 	while (line[i] != '\n' && line[i])
 		i++;
 	if (!line[i] && !stach[i])
+	{
+		while (j <= i)
+		{
+			stach[j] = 0;
+			j++;
+		}
 		return ;
+	}
 	i++;
 	while (stach[i] != '\0')
 	{
@@ -114,7 +127,7 @@ void	fill_char(char *dst, char *src, int till_nl)
 			dst[i + 1] = '\0';
 	}
 }
-
+/* 
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
@@ -124,20 +137,20 @@ int main()
 	char *res;
 	const char *expectedres;
 
-	printf("\n---41_with_nl---\n");
-	fd = open("./gnlTester/files/41_with_nl", O_RDWR);
+	printf("\n---nl---\n");
+	fd = open("./gnlTester/files/41_no_nl", O_RDWR);
 	res = get_next_line(fd);
-	expectedres = "0123456789012345678901234567890123456789\n";
-	if (!strcmp(res, expectedres))
+	expectedres = "01234567890123456789012345678901234567890";
+	if (!ft_strcmp(res, expectedres))
 		printf("right : %s---------\n", res);
 	else
 		printf("%s \ninstead of \n%s\n---------\n", res, expectedres);
 	res = get_next_line(fd);
 	expectedres = "0";
-	if (!strcmp(res, expectedres))
+	if (res == NULL)
 		printf("right : %s---------\n", res);
 	else
-		printf("%s \ninstead of \n%s\n---------\n", res, expectedres);
+		printf("%s \ninstead of \nNULL\n---------\n", res);
 	close(fd);
 }
 
@@ -194,3 +207,4 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (joined);
 }
 
+ */
