@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:20:32 by levasse           #+#    #+#             */
-/*   Updated: 2022/12/01 11:27:42 by llevasse         ###   ########.fr       */
+/*   Updated: 2022/12/02 11:26:21 by leo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*get_next_line(int fd)
 {
 	char		*line;
 	static char	*stach;
-	char		buff[BUFFER_SIZE + 1];
+	char		buff[BUFFER_SIZE];
 	int			count;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
@@ -37,6 +37,7 @@ char	*get_next_line(int fd)
 	if (!is_nl(stach))
 	{
 		count = read(fd, buff, BUFFER_SIZE);
+		buff[count] = '\0';
 		while (!is_nl(stach) && count > 0)
 		{
 			stach = ft_strjoin(stach, buff);
@@ -45,6 +46,7 @@ char	*get_next_line(int fd)
 				return (NULL);
 			if (!is_nl(stach))
 				count = read(fd, buff, BUFFER_SIZE);
+			buff[count] = '\0';
 		}
 		if (count <= 0)
 			stach = ft_strjoin(stach, "\0");
@@ -153,12 +155,12 @@ int main()
 
 	printf("\n---multiple_line_no_nl---\n");
 	fd = open("./gnlTester/files/multiple_line_no_nl", O_RDWR);
-/* 1 */ gnl(fd, "01234567890123456789012345678901234567890\n");
-/* 2 */ gnl(fd, "987654321098765432109876543210987654321098\n");
-/* 3 */ gnl(fd, "0123456789012345678901234567890123456789012\n");
-/* 4 */ gnl(fd, "987654321098765432109876543210987654321098\n");
-/* 5 */ gnl(fd, "01234567890123456789012345678901234567890");
-/* 6 */ gnl(fd, NULL);
+	gnl(fd, "01234567890123456789012345678901234567890\n");
+	gnl(fd, "987654321098765432109876543210987654321098\n");
+	gnl(fd, "0123456789012345678901234567890123456789012\n");
+	gnl(fd, "987654321098765432109876543210987654321098\n");
+	gnl(fd, "01234567890123456789012345678901234567890");
+	gnl(fd, NULL);
 }
 
 void gnl(int fd, char *expectedres)
