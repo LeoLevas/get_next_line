@@ -6,7 +6,7 @@
 /*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:20:32 by levasse           #+#    #+#             */
-/*   Updated: 2022/12/02 11:26:21 by leo              ###   ########.fr       */
+/*   Updated: 2022/12/04 17:25:43 by leo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*get_next_line(int fd)
 {
 	char		*line;
 	static char	*stach;
-	char		buff[BUFFER_SIZE];
+	static char	buff[BUFFER_SIZE];
 	int			count;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
@@ -57,7 +57,7 @@ char	*get_next_line(int fd)
 	fill_char(line, stach, 1);
 	if (ft_strcmp(line, stach))
 		get_left_over(line, stach);
-	else 
+	else
 	{
 		free(stach);
 		stach = NULL;
@@ -153,12 +153,8 @@ int main()
 {
 	int fd;
 
-	printf("\n---multiple_line_no_nl---\n");
-	fd = open("./gnlTester/files/multiple_line_no_nl", O_RDWR);
-	gnl(fd, "01234567890123456789012345678901234567890\n");
-	gnl(fd, "987654321098765432109876543210987654321098\n");
-	gnl(fd, "0123456789012345678901234567890123456789012\n");
-	gnl(fd, "987654321098765432109876543210987654321098\n");
+	printf("\n---big_line_no_nl---\n");
+	fd = open("./gnlTester/files/41_no_nl", O_RDWR);
 	gnl(fd, "01234567890123456789012345678901234567890");
 	gnl(fd, NULL);
 }
@@ -210,7 +206,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	char	*joined;
 	int		i;
 	int		j;
-	
+
 	i = 0;
 	j = 0;
 	if (!s1 || !s2)
@@ -235,4 +231,3 @@ char	*ft_strjoin(char *s1, char *s2)
 	free(s1);
 	return (joined);
 }
-

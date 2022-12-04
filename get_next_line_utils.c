@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
+/*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 17:29:20 by llevasse          #+#    #+#             */
-/*   Updated: 2022/11/29 08:37:15 by llevasse         ###   ########.fr       */
+/*   Updated: 2022/12/04 17:25:33 by leo              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ size_t	ft_strlen(const char *str)
 	unsigned long	i;
 
 	i = 0;
-	while (str[i])
+	while (str[i] != '\0')
 		i++;
 	return (i);
 }
@@ -60,7 +60,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		j++;
 		i++;
 	}
-	free(s1);
 	joined[j] = '\0';
+	free(s1);
 	return (joined);
 }
