@@ -3,22 +3,34 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/22 09:21:50 by levasse           #+#    #+#             */
-/*   Updated: 2022/11/26 09:22:46 by leo              ###   ########.fr       */
+/*   Created: 2022/12/14 10:59:20 by llevasse          #+#    #+#             */
+/*   Updated: 2022/12/14 10:59:21 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_BONUS_H
-# define GET_NEXT_LINE_BONUS_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
 # include <stdlib.h>
 # include <unistd.h>
 
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1
+# endif
+
 char		*get_next_line(int fd);
-void		fill_char(char *dst, char *src);
-static char	*get_next_line_part2(int fd, char *line, char buff[1]);
-static char	*fill_string(char *s1, char *s2, int len_line);
+void		fill_char(char *dst, char *src, int till_nl);
+char		*ft_strjoin(char *s1, char *s2);
+size_t		ft_strlen(const char *str);
+int			is_nl(const char *str);
+void		get_left_over(char *line, char *stach);
+void		clear_buff(char buff[BUFFER_SIZE]);
+int			ft_strcmp(const char *s1, const char *s2);
+void		ft_setzero(char *stach);
+void		empty_buff(char buff[BUFFER_SIZE]);
+char		*check_stach_has_nl(char *stach, char buff[BUFFER_SIZE], int fd);
+char		*stach_empty(char *stach, int fd, char buff[BUFFER_SIZE]);
 
 #endif

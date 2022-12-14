@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/22 09:20:32 by levasse           #+#    #+#             */
-/*   Updated: 2022/11/26 09:23:43 by leo              ###   ########.fr       */
+/*   Created: 2022/12/14 10:57:39 by llevasse          #+#    #+#             */
+/*   Updated: 2022/12/14 10:58:42 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,87 +14,110 @@
 
 char	*get_next_line(int fd)
 {
-	char	*line;
-	char	buff[1];
-	int		count;
+	static char	*stach;
+	static char	buff[BUFFER_SIZE];
+	char		*line;
 
-	if (fd < 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	count = read(fd, buff, 1);
-	if (count <= 0)
+	if (ft_strcmp(stach, "") == 0)
+		stach = stach_empty(stach, fd, buff);
+	if (!stach)
 		return (NULL);
-	line = malloc(2 * sizeof(char));
+	stach = check_stach_has_nl(stach, buff, fd);
+	if (!stach)
+		return (NULL);
+	line = malloc((ft_strlen(stach) + 1) * sizeof(char));
 	if (!line)
 		return (NULL);
-	line[0] = buff[0];
-	line [1] = '\0';
-	line = get_next_line_part2(fd, line, buff);
+	fill_char(line, stach, 1);
+	if (ft_strcmp(line, stach))
+		get_left_over(line, stach);
+	else
+	{
+		free(stach);
+		stach = NULL;
+	}
 	return (line);
 }
 
-static char	*fill_string(char *s1, char *s2, int len_line)
+char	*stach_empty(char *stach, int fd, char buff[BUFFER_SIZE])
 {
-	s1 = malloc((len_line + 1) * sizeof(char));
-	if (!s1)
-	{
-		free(s2);
+	int	count;
+
+	count = read(fd, buff, BUFFER_SIZE);
+	buff[count] = '\0';
+	if (count <= 0)
 		return (NULL);
-	}
-	fill_char(s1, s2);
-	free(s2);
-	return (s1);
+	stach = malloc((count + 1) * sizeof(char));
+	if (!stach)
+		return (NULL);
+	stach[count] = '\0';
+	fill_char(stach, buff, 0);
+	empty_buff(buff);
+	return (stach);
 }
 
-static char	*get_next_line_part2(int fd, char *line, char buff[1])
+char	*check_stach_has_nl(char *stach, char buff[BUFFER_SIZE], int fd)
 {
-	char	*temp;
-	int		len_line;
-	int		count;
+	int	count;
 
-	count = 1;
-	len_line = 1;
-	while (count != 0 && buff[0] != '\n' && buff[0] != '\0')
+	if (!is_nl(stach))
 	{
-		temp = fill_string(temp, line, len_line + 1);
-		if (!temp)
-			return (NULL);
-		line = fill_string(line, temp, len_line + 2);
-		if (!line)
-			return (NULL);
-		count = read(fd, buff, 1);
-		line[len_line] = buff[0];
-		if (buff[0] != '\n')
-			line[len_line + 1] = '\0';
-		if (count == 0)
-			line[len_line] = '\0';
-		len_line++;
+		count = read(fd, buff, BUFFER_SIZE);
+		buff[count] = '\0';
+		while (!is_nl(stach) && count > 0)
+		{
+			stach = ft_strjoin(stach, buff);
+			empty_buff(buff);
+			if (!stach)
+				return (NULL);
+			if (!is_nl(stach))
+				count = read(fd, buff, BUFFER_SIZE);
+			buff[count] = '\0';
+		}
+		if (count <= 0)
+			stach = ft_strjoin(stach, "\0");
 	}
-	line[len_line] = '\0';
-	return (line);
+	return (stach);
 }
 
-void	fill_char(char *dst, char *src)
+void	empty_buff(char buff[BUFFER_SIZE])
 {
 	int	i;
 
 	i = 0;
-	while (src[i] != '\0')
+	while (i <= BUFFER_SIZE && buff[i] != 0)
 	{
-		dst[i] = src[i];
+		buff[i] = 0;
 		i++;
 	}
-	dst[i] = src[i];
 }
 
-/* #include <fcntl.h>
-#include <stdio.h>
-int main()
+void	get_left_over(char *line, char *stach)
 {
-    int fd;
-    char *res;
-    
-    fd = open("./gnlTester/files/alternate_line_nl_with_nl", O_RDWR);
-    res = get_next_line(0);
-    close(fd);
-    printf("%s", res);
-} */
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (line[i] != '\n' && line[i])
+		i++;
+	if (!line[i] && !stach[i])
+	{
+		while (j <= i)
+		{
+			stach[j] = 0;
+			j++;
+		}
+		return ;
+	}
+	i++;
+	while (stach[i] != '\0')
+	{
+		stach[j] = stach[i];
+		i++;
+		j++;
+	}
+	stach[j] = '\0';
+}

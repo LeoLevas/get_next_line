@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leo <leo@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 17:29:20 by llevasse          #+#    #+#             */
-/*   Updated: 2022/12/04 17:25:33 by leo              ###   ########.fr       */
+/*   Updated: 2022/12/14 10:54:53 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,19 +48,49 @@ char	*ft_strjoin(char *s1, char *s2)
 	if (!joined)
 		return (NULL);
 	while (s1[i] != '\0')
-	{
-		joined[j] = s1[i];
-		i++;
-		j++;
-	}
+		joined[j++] = s1[i++];
 	i = 0;
 	while (s2[i] != '\0')
-	{
-		joined[j] = s2[i];
-		j++;
-		i++;
-	}
+		joined[j++] = s2[i++];
 	joined[j] = '\0';
-	free(s1);
-	return (joined);
+	return (free(s1), joined);
+}
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	unsigned int	i;
+
+	i = 0;
+	if (!s1 || !s2)
+		return (0);
+	while (s1[i] == s2[i] && (s1[i] || s2[i]))
+		i++;
+	return (s1[i] - s2[i]);
+}
+
+void	fill_char(char *dst, char *src, int till_nl)
+{
+	int	i;
+
+	i = 0;
+	if (!till_nl)
+	{
+		while (src[i] > 0)
+		{
+			dst[i] = src[i];
+			i++;
+		}
+		dst[i] = '\0';
+	}
+	else
+	{
+		while (src[i] > 0 && src[i] != '\n')
+		{
+			dst[i] = src[i];
+			i++;
+		}
+		dst[i] = src[i];
+		if (dst[i] != '\0')
+			dst[i + 1] = '\0';
+	}
 }
