@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 10:57:39 by llevasse          #+#    #+#             */
-/*   Updated: 2022/12/14 10:58:42 by llevasse         ###   ########.fr       */
+/*   Updated: 2023/01/10 10:52:04 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,30 +14,41 @@
 
 char	*get_next_line(int fd)
 {
-	static char	*stach;
-	static char	buff[BUFFER_SIZE];
+	static char	buff[65535];
+	char		stach;
 	char		*line;
 
+	stach = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	if (ft_strcmp(stach, "") == 0)
+	if (ft_strcmp(buff, "") == 0)
 		stach = stach_empty(stach, fd, buff);
-	if (!stach)
+	else
+	{
+		stach = malloc((ft_strlen(buff) + 1) * sizeof(char));
+		if (!stach)
+			return (NULL);
+		fill_char(stach, buff, 0);
+	}
+	if (!stach && buff[0] != 0)
 		return (NULL);
 	stach = check_stach_has_nl(stach, buff, fd);
 	if (!stach)
 		return (NULL);
+	if (stach[0] == '\0')
+	{
+		free(stach);
+		stach = NULL;
+		return (NULL);
+	}
 	line = malloc((ft_strlen(stach) + 1) * sizeof(char));
 	if (!line)
 		return (NULL);
 	fill_char(line, stach, 1);
 	if (ft_strcmp(line, stach))
-		get_left_over(line, stach);
-	else
-	{
-		free(stach);
-		stach = NULL;
-	}
+		return (get_left_over(line, stach, buff), line);
+	free(stach);
+	stach = NULL;
 	return (line);
 }
 
@@ -47,7 +58,7 @@ char	*stach_empty(char *stach, int fd, char buff[BUFFER_SIZE])
 
 	count = read(fd, buff, BUFFER_SIZE);
 	buff[count] = '\0';
-	if (count <= 0)
+	if (count < 0)
 		return (NULL);
 	stach = malloc((count + 1) * sizeof(char));
 	if (!stach)
@@ -62,6 +73,8 @@ char	*check_stach_has_nl(char *stach, char buff[BUFFER_SIZE], int fd)
 {
 	int	count;
 
+	if (!stach)
+		return (stach);
 	if (!is_nl(stach))
 	{
 		count = read(fd, buff, BUFFER_SIZE);
@@ -94,7 +107,7 @@ void	empty_buff(char buff[BUFFER_SIZE])
 	}
 }
 
-void	get_left_over(char *line, char *stach)
+void	get_left_over(char *line, char *stach, char buff[BUFFER_SIZE])
 {
 	int	i;
 	int	j;
@@ -103,21 +116,16 @@ void	get_left_over(char *line, char *stach)
 	j = 0;
 	while (line[i] != '\n' && line[i])
 		i++;
-	if (!line[i] && !stach[i])
-	{
-		while (j <= i)
-		{
-			stach[j] = 0;
-			j++;
-		}
-		return ;
-	}
+	if (!line[i])
+		return (free(stach));
 	i++;
 	while (stach[i] != '\0')
 	{
-		stach[j] = stach[i];
+		buff[j] = stach[i];
 		i++;
 		j++;
 	}
-	stach[j] = '\0';
+	buff[j] = '\0';
+	free(stach);
+	stach = NULL;
 }

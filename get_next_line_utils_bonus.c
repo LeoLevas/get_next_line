@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 10:58:13 by llevasse          #+#    #+#             */
-/*   Updated: 2022/12/14 10:58:35 by llevasse         ###   ########.fr       */
+/*   Updated: 2023/01/08 21:16:16 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ size_t	ft_strlen(const char *str)
 	unsigned long	i;
 
 	i = 0;
+	if (!str)
+		return (i);
 	while (str[i] != '\0')
 		i++;
 	return (i);
@@ -73,7 +75,10 @@ void	fill_char(char *dst, char *src, int till_nl)
 	int	i;
 
 	i = 0;
-	if (!till_nl)
+
+	if (!src)
+		dst[0] = '\0';
+	else if (!till_nl)
 	{
 		while (src[i] > 0)
 		{

@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 10:59:20 by llevasse          #+#    #+#             */
-/*   Updated: 2022/12/14 11:58:53 by llevasse         ###   ########.fr       */
+/*   Updated: 2023/01/08 21:22:36 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 42
 # endif
 
 char		*get_next_line(int fd);
@@ -25,7 +25,7 @@ void		fill_char(char *dst, char *src, int till_nl);
 char		*ft_strjoin(char *s1, char *s2);
 size_t		ft_strlen(const char *str);
 int			is_nl(const char *str);
-void		get_left_over(char *line, char *stach);
+void		get_left_over(char *line, char *stach, char buff[BUFFER_SIZE]);
 void		clear_buff(char buff[BUFFER_SIZE]);
 int			ft_strcmp(const char *s1, const char *s2);
 void		ft_setzero(char *stach);
