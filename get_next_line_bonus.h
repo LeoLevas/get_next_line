@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 10:59:20 by llevasse          #+#    #+#             */
-/*   Updated: 2023/01/08 21:22:36 by llevasse         ###   ########.fr       */
+/*   Updated: 2023/01/16 17:34:56 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,14 @@
 
 # include <stdlib.h>
 # include <unistd.h>
+# include <limits.h> 
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
+# endif
+
+# ifndef OPEN_MAX
+#  define OPEN_MAX 1064
 # endif
 
 char		*get_next_line(int fd);

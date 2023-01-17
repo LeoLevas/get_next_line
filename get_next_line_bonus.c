@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 10:57:39 by llevasse          #+#    #+#             */
-/*   Updated: 2023/01/10 10:52:04 by llevasse         ###   ########.fr       */
+/*   Updated: 2023/01/16 17:45:30 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,42 +14,39 @@
 
 char	*get_next_line(int fd)
 {
-	static char	buff[65535];
-	char		stach;
-	char		*line;
+	char			buff[BUFFER_SIZE + 1];
+	static char		*stach[OPEN_MAX];
+	char			*line;
 
-	stach = NULL;
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > OPEN_MAX)
+	{
+		if (stach[fd])
+			return (free(stach[fd]), stach[fd] = NULL, NULL);
 		return (NULL);
+	}
 	if (ft_strcmp(buff, "") == 0)
-		stach = stach_empty(stach, fd, buff);
+		stach[fd] = stach_empty(stach[fd], fd, buff);
 	else
 	{
-		stach = malloc((ft_strlen(buff) + 1) * sizeof(char));
-		if (!stach)
+		stach[fd] = malloc((ft_strlen(buff) + 1) * sizeof(char));
+		if (!stach[fd])
 			return (NULL);
-		fill_char(stach, buff, 0);
+		fill_char(stach[fd], buff, 0);
 	}
-	if (!stach && buff[0] != 0)
+	if (!stach[fd] && buff[0] != 0)
 		return (NULL);
-	stach = check_stach_has_nl(stach, buff, fd);
-	if (!stach)
+	stach[fd] = check_stach_has_nl(stach[fd], buff, fd);
+	if (!stach[fd])
 		return (NULL);
-	if (stach[0] == '\0')
-	{
-		free(stach);
-		stach = NULL;
-		return (NULL);
-	}
-	line = malloc((ft_strlen(stach) + 1) * sizeof(char));
+	if (stach[fd][0] == '\0')
+		return (free(stach[fd]), stach[fd] = NULL, NULL);
+	line = malloc((ft_strlen(stach[fd]) + 1) * sizeof(char));
 	if (!line)
 		return (NULL);
-	fill_char(line, stach, 1);
-	if (ft_strcmp(line, stach))
-		return (get_left_over(line, stach, buff), line);
-	free(stach);
-	stach = NULL;
-	return (line);
+	fill_char(line, stach[fd], 1);
+	if (ft_strcmp(line, stach[fd]))
+		return (get_left_over(line, stach[fd], buff), line);
+	return (free(stach[fd]), stach[fd] = NULL, line);
 }
 
 char	*stach_empty(char *stach, int fd, char buff[BUFFER_SIZE])
