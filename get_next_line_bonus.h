@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 10:59:20 by llevasse          #+#    #+#             */
-/*   Updated: 2023/01/16 17:34:56 by llevasse         ###   ########.fr       */
+/*   Updated: 2023/01/20 12:24:46 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,16 +26,17 @@
 # endif
 
 char		*get_next_line(int fd);
+int			check_fd(int fd, char *stach);
 void		fill_char(char *dst, char *src, int till_nl);
 char		*ft_strjoin(char *s1, char *s2);
 size_t		ft_strlen(const char *str);
 int			is_nl(const char *str);
-void		get_left_over(char *line, char *stach, char buff[BUFFER_SIZE]);
+void		get_left_over(char *line, char *stach);
 void		clear_buff(char buff[BUFFER_SIZE]);
 int			ft_strcmp(const char *s1, const char *s2);
 void		ft_setzero(char *stach);
 void		empty_buff(char buff[BUFFER_SIZE]);
-char		*check_stach_has_nl(char *stach, char buff[BUFFER_SIZE], int fd);
+char		*check_stach_nl(char *stach, char buff[BUFFER_SIZE + 1], int fd);
 char		*stach_empty(char *stach, int fd, char buff[BUFFER_SIZE]);
 
 #endif

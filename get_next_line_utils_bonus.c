@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 10:58:13 by llevasse          #+#    #+#             */
-/*   Updated: 2023/01/08 21:16:16 by llevasse         ###   ########.fr       */
+/*   Updated: 2023/01/20 12:30:51 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ void	fill_char(char *dst, char *src, int till_nl)
 	int	i;
 
 	i = 0;
-
 	if (!src)
 		dst[0] = '\0';
 	else if (!till_nl)
