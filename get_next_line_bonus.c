@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 10:57:39 by llevasse          #+#    #+#             */
-/*   Updated: 2022/12/14 10:58:42 by llevasse         ###   ########.fr       */
+/*   Updated: 2023/01/20 12:30:37 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,54 +14,70 @@
 
 char	*get_next_line(int fd)
 {
-	static char	*stach;
-	static char	buff[BUFFER_SIZE];
-	char		*line;
+	char			buff[BUFFER_SIZE + 1];
+	static char		*stach[OPEN_MAX];
+	char			*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (!check_fd(fd, stach[fd]))
 		return (NULL);
-	if (ft_strcmp(stach, "") == 0)
-		stach = stach_empty(stach, fd, buff);
-	if (!stach)
+	buff[0] = 0;
+	stach[fd] = stach_empty(stach[fd], fd, buff);
+	if (!stach[fd] && buff[0] != 0)
 		return (NULL);
-	stach = check_stach_has_nl(stach, buff, fd);
-	if (!stach)
+	stach[fd] = check_stach_nl(stach[fd], buff, fd);
+	if (!stach[fd])
 		return (NULL);
-	line = malloc((ft_strlen(stach) + 1) * sizeof(char));
+	if (stach[fd][0] == '\0')
+		return (free(stach[fd]), stach[fd] = NULL, NULL);
+	line = malloc((ft_strlen(stach[fd]) + 1) * sizeof(char));
 	if (!line)
 		return (NULL);
-	fill_char(line, stach, 1);
-	if (ft_strcmp(line, stach))
-		get_left_over(line, stach);
-	else
+	fill_char(line, stach[fd], 1);
+	if (ft_strcmp(line, stach[fd]))
+		return (get_left_over(line, stach[fd]), line);
+	return (free(stach[fd]), stach[fd] = NULL, line);
+}
+
+int	check_fd(int fd, char *stach)
+{
+	char	buff[BUFFER_SIZE + 1];
+
+	if (fd < 0 || BUFFER_SIZE <= 0 || fd > OPEN_MAX || read(fd, buff, 0) != 0)
 	{
-		free(stach);
-		stach = NULL;
+		if (stach)
+		{
+			free(stach);
+			stach = NULL;
+		}
+		return (0);
 	}
-	return (line);
+	return (1);
 }
 
 char	*stach_empty(char *stach, int fd, char buff[BUFFER_SIZE])
 {
 	int	count;
 
+	if (stach)
+		return (stach);
 	count = read(fd, buff, BUFFER_SIZE);
 	buff[count] = '\0';
-	if (count <= 0)
+	if (count < 0)
 		return (NULL);
 	stach = malloc((count + 1) * sizeof(char));
 	if (!stach)
 		return (NULL);
 	stach[count] = '\0';
 	fill_char(stach, buff, 0);
-	empty_buff(buff);
 	return (stach);
 }
 
-char	*check_stach_has_nl(char *stach, char buff[BUFFER_SIZE], int fd)
+char	*check_stach_nl(char *stach, char buff[BUFFER_SIZE + 1], int fd)
 {
 	int	count;
 
+	if (!stach)
+		return (stach);
 	if (!is_nl(stach))
 	{
 		count = read(fd, buff, BUFFER_SIZE);
@@ -69,7 +85,6 @@ char	*check_stach_has_nl(char *stach, char buff[BUFFER_SIZE], int fd)
 		while (!is_nl(stach) && count > 0)
 		{
 			stach = ft_strjoin(stach, buff);
-			empty_buff(buff);
 			if (!stach)
 				return (NULL);
 			if (!is_nl(stach))
@@ -82,18 +97,6 @@ char	*check_stach_has_nl(char *stach, char buff[BUFFER_SIZE], int fd)
 	return (stach);
 }
 
-void	empty_buff(char buff[BUFFER_SIZE])
-{
-	int	i;
-
-	i = 0;
-	while (i <= BUFFER_SIZE && buff[i] != 0)
-	{
-		buff[i] = 0;
-		i++;
-	}
-}
-
 void	get_left_over(char *line, char *stach)
 {
 	int	i;
@@ -102,22 +105,11 @@ void	get_left_over(char *line, char *stach)
 	i = 0;
 	j = 0;
 	while (line[i] != '\n' && line[i])
-		i++;
-	if (!line[i] && !stach[i])
-	{
-		while (j <= i)
-		{
-			stach[j] = 0;
-			j++;
-		}
-		return ;
-	}
+		stach[i++] = 0;
+	if (!line[i])
+		return (free(stach));
 	i++;
 	while (stach[i] != '\0')
-	{
-		stach[j] = stach[i];
-		i++;
-		j++;
-	}
-	stach[j] = '\0';
+		stach[j++] = stach[i++];
+	stach[j] = 0;
 }

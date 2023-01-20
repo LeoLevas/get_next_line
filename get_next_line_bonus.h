@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 10:59:20 by llevasse          #+#    #+#             */
-/*   Updated: 2022/12/14 11:58:53 by llevasse         ###   ########.fr       */
+/*   Updated: 2023/01/20 12:24:46 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,18 @@
 
 # include <stdlib.h>
 # include <unistd.h>
+# include <limits.h> 
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 42
+# endif
+
+# ifndef OPEN_MAX
+#  define OPEN_MAX 1064
 # endif
 
 char		*get_next_line(int fd);
+int			check_fd(int fd, char *stach);
 void		fill_char(char *dst, char *src, int till_nl);
 char		*ft_strjoin(char *s1, char *s2);
 size_t		ft_strlen(const char *str);
@@ -30,7 +36,7 @@ void		clear_buff(char buff[BUFFER_SIZE]);
 int			ft_strcmp(const char *s1, const char *s2);
 void		ft_setzero(char *stach);
 void		empty_buff(char buff[BUFFER_SIZE]);
-char		*check_stach_has_nl(char *stach, char buff[BUFFER_SIZE], int fd);
+char		*check_stach_nl(char *stach, char buff[BUFFER_SIZE + 1], int fd);
 char		*stach_empty(char *stach, int fd, char buff[BUFFER_SIZE]);
 
 #endif
