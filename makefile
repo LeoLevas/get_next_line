@@ -1,4 +1,4 @@
-FILES		= 	*bonus*.c main.c
+FILES		= 	get_next_line.c get_next_line_utils.c main.c
 
 FLAGS		=	-fsanitize=address -Wall -Wextra -Werror
 
@@ -9,7 +9,7 @@ DEBUG_FILES =	main.c
 EXECUTABLE	:= main
 
 clean:
-				rm -f ${OBJS} ${OBJS_BONUS} ${LIBFT_OBJS}
+				rm -f ${OBJS}
 
 fclean : clean
 

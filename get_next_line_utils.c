@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/24 17:29:20 by llevasse          #+#    #+#             */
-/*   Updated: 2022/12/14 12:47:47 by llevasse         ###   ########.fr       */
+/*   Updated: 2023/01/21 13:36:31 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ size_t	ft_strlen(const char *str)
 	unsigned long	i;
 
 	i = 0;
+	if (!str)
+		return (i);
 	while (str[i] != '\0')
 		i++;
 	return (i);
@@ -46,7 +48,7 @@ char	*ft_strjoin(char *s1, char *s2)
 		return (NULL);
 	joined = malloc((ft_strlen(s1) + ft_strlen(s2)) * sizeof(char) + 1);
 	if (!joined)
-		return (NULL);
+		return (free(s1), NULL);
 	while (s1[i] != '\0')
 		joined[j++] = s1[i++];
 	i = 0;
@@ -73,7 +75,9 @@ void	fill_char(char *dst, char *src, int till_nl)
 	int	i;
 
 	i = 0;
-	if (!till_nl)
+	if (!src)
+		dst[0] = '\0';
+	else if (!till_nl)
 	{
 		while (src[i] > 0)
 		{
@@ -90,7 +94,6 @@ void	fill_char(char *dst, char *src, int till_nl)
 			i++;
 		}
 		dst[i] = src[i];
-		if (dst[i] != '\0')
-			dst[i + 1] = '\0';
+		dst[i + 1] = 0;
 	}
 }
