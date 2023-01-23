@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:20:32 by llevasse          #+#    #+#             */
-/*   Updated: 2023/01/23 10:59:18 by llevasse         ###   ########.fr       */
+/*   Updated: 2023/01/23 11:12:59 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*get_next_line(int fd)
 		return (free(stach), stach = NULL, NULL);
 	line = return_line(stach);
 	if (!line)
-		return (free(stach), stach = NULL, line);
+		return (free(stach), stach = NULL, NULL);
 	if (ft_strcmp(line, stach))
 		return (get_left_over(line, stach), line);
 	return (free(stach), stach = NULL, line);
@@ -51,7 +51,7 @@ char	*return_line(char *stach)
 		i++;
 	line = malloc((i + is_nl(stach) + 1) * sizeof(char));
 	if (!line)
-		return (free(stach), stach = NULL, NULL);
+		return (NULL);
 	fill_char(line, stach, is_nl(stach));
 	return (line);
 }

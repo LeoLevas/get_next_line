@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 10:57:39 by llevasse          #+#    #+#             */
-/*   Updated: 2023/01/21 13:35:24 by llevasse         ###   ########.fr       */
+/*   Updated: 2023/01/23 11:12:29 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ char	*get_next_line(int fd)
 {
 	char			buff[BUFFER_SIZE + 1];
 	static char		*stach[OPEN_MAX];
+	char			*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || fd > OPEN_MAX || read(fd, buff, 0) != 0)
 	{
@@ -32,7 +33,12 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (stach[fd][0] == '\0')
 		return (free(stach[fd]), stach[fd] = NULL, NULL);
-	return (return_line(stach, fd));
+	line = return_line(stach, fd);
+	if (!line)
+		return (free(stach[fd]), stach[fd] = NULL, NULL);
+	if (ft_strcmp(line, stach[fd]))
+		return (get_left_over(line, stach[fd]), line);
+	return (free(stach[fd]), stach[fd] = NULL, line);
 }
 
 char	*return_line(char *stach[OPEN_MAX], int fd)
@@ -45,11 +51,9 @@ char	*return_line(char *stach[OPEN_MAX], int fd)
 		i++;
 	line = malloc((i + is_nl(stach[fd]) + 1) * sizeof(char));
 	if (!line)
-		return (free(stach[fd]), stach[fd] = NULL, NULL);
+		return (NULL);
 	fill_char(line, stach[fd], is_nl(stach[fd]));
-	if (ft_strcmp(line, stach[fd]))
-		return (get_left_over(line, stach[fd]), line);
-	return (free(stach[fd]), stach[fd] = NULL, line);
+	return (line);
 }
 
 char	*stach_empty(char *stach, int fd, char buff[BUFFER_SIZE])
