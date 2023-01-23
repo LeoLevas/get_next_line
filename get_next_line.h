@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:21:50 by levasse           #+#    #+#             */
-/*   Updated: 2023/01/21 13:40:37 by llevasse         ###   ########.fr       */
+/*   Updated: 2023/01/23 10:25:40 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,5 @@ void		empty_buff(char buff[BUFFER_SIZE]);
 char		*check_stach_nl(char *stach, char buff[BUFFER_SIZE + 1], int fd);
 char		*stach_empty(char *stach, int fd, char buff[BUFFER_SIZE]);
 char		*return_line(char *stach);
-
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: llevasse <llevasse@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 09:20:32 by llevasse          #+#    #+#             */
-/*   Updated: 2023/01/21 14:17:23 by llevasse         ###   ########.fr       */
+/*   Updated: 2023/01/23 10:59:18 by llevasse         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 char	*get_next_line(int fd)
 {
 	char			buff[BUFFER_SIZE + 1];
-	static char		*stach;
+	static char		*stach = NULL;
+	char			*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, buff, 0) != 0)
 	{
@@ -32,7 +33,12 @@ char	*get_next_line(int fd)
 		return (NULL);
 	if (stach[0] == '\0')
 		return (free(stach), stach = NULL, NULL);
-	return (return_line(stach));
+	line = return_line(stach);
+	if (!line)
+		return (free(stach), stach = NULL, line);
+	if (ft_strcmp(line, stach))
+		return (get_left_over(line, stach), line);
+	return (free(stach), stach = NULL, line);
 }
 
 char	*return_line(char *stach)
@@ -47,9 +53,7 @@ char	*return_line(char *stach)
 	if (!line)
 		return (free(stach), stach = NULL, NULL);
 	fill_char(line, stach, is_nl(stach));
-	if (ft_strcmp(line, stach))
-		return (get_left_over(line, stach), line);
-	return (free(stach), stach = NULL, line);
+	return (line);
 }
 
 char	*stach_empty(char *stach, int fd, char buff[BUFFER_SIZE])
